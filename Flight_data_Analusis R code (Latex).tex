@@ -1,0 +1,554 @@
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage[colorlinks=true,
+            linkcolor=blue]{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{tocloft}
+
+%------------------------------------------------
+% COLORS
+%------------------------------------------------
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{titleblue}{RGB}{0,51,102}
+\definecolor{sectioncolor}{RGB}{0,76,153}
+
+%------------------------------------------------
+% PAGE STYLE
+%------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{R Analysis}
+\lhead{Flight Data Analysis Assignment}
+\cfoot{\thepage}
+
+%------------------------------------------------
+% SECTION STYLE
+%------------------------------------------------
+\titleformat{\section}
+{\color{sectioncolor}\normalfont\Large\bfseries}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\color{titleblue}\normalfont\large\bfseries}
+{\thesubsection}{1em}{}
+
+%------------------------------------------------
+% LISTING STYLE FOR R CODE
+%------------------------------------------------
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{black}
+}
+
+\lstset{style=mystyle}
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries \textcolor{titleblue}{Flight Data Analysis Programing with R }}\\[1cm]
+
+    \vspace{1cm}
+
+    {\Large Assignment Report}\\[1.5cm]
+
+    \includegraphics[width=0.60\textwidth]{images.jpeg}\\[2cm]
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|>{\bfseries}m{4cm}|m{8cm}|}
+    \hline
+    Student Name & Md Sariful Islam \\
+    \hline
+    Student ID & 12310066 \\
+    \hline
+    Department & Statistics \\
+    \hline
+    Course Title & Programming with R and Python \\
+    \hline
+    Course Code & STAT-2205\\
+    \hline
+    Submitted To & Dr. Md. Siddikur Rahman (Associate Professor)\\
+    \hline
+    Submission Date & May 20, 2026 \\
+    \hline
+    \end{tabular}
+
+    \vfill
+
+    {\Huge\textbf{Begum Rokeya University}}\\[0.3cm]
+    {\large Rangpur, Bangladesh}
+
+\end{titlepage}
+
+\tableofcontents
+%------------------------------------------------
+% INTRODUCTION
+%------------------------------------------------
+\section{Introduction}
+This assignment analyzes flight ticket pricing, delays, distance, flight duration, and passenger service features using the R programming language. Different statistical techniques, visualizations, hypothesis testing, correlation analysis, and regression models are applied to understand the relationships among variables.
+
+%------------------------------------------------
+% SOFTWARE AND LIBRARIES
+%------------------------------------------------
+\section{Software and Libraries Used}
+The following R libraries were used:
+
+\begin{itemize}
+    \item ggplot2
+    \item dplyr
+    \item stats
+\end{itemize}
+
+%------------------------------------------------
+% DATA LOADING
+%------------------------------------------------
+\section{Data Loading and Preparation}
+
+\begin{lstlisting}[language=R, caption=Load Dataset]
+# Set working directory
+getwd()
+list.files()
+setwd("C:/Users/USER/Downloads/R & Python")
+
+# Package path
+.libPaths()
+.libPaths("C:/Users/USER/Downloads/R & Python/pakage")
+
+# Install and load packages
+install.packages("ggplot2")
+install.packages("dplyr")
+
+library(ggplot2)
+library(dplyr)
+
+# Load dataset
+flight <- read.csv("C:/Users/USER/Downloads/R & Python/flight_data.csv")
+
+# Random sample
+set.seed(66)
+flight_sample <- flight[sample(nrow(flight), 10000), ]
+\end{lstlisting}
+
+%------------------------------------------------
+% QUESTION 1
+%------------------------------------------------
+\section{Question 1: Coach Ticket Price Analysis}
+
+\subsection{Objective}
+To analyze the distribution of coach ticket prices and determine whether \$500 is a reasonable ticket price.
+
+\subsection{R Code}
+
+\begin{lstlisting}[language=R, caption=Coach Ticket Price Analysis]
+# Summary statistics
+summary(flight_sample$coach_price)
+
+# Mean
+mean(flight_sample$coach_price)
+
+# Histogram
+ggplot(flight_sample, aes(x=coach_price)) +
+  geom_histogram(bins=30,
+                 fill="skyblue",
+                 color="black") +
+  labs(
+    title="Distribution of Coach Ticket Prices",
+    x="Coach Ticket Price",
+    y="Frequency"
+  )
+\end{lstlisting}
+
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/1.1 R.png}\\
+ \end{center}
+
+
+\subsection{Interpretation}
+The histogram and summary statistics show the overall distribution of coach ticket prices. The average price can be compared with \$500 to determine whether it is considered expensive or reasonable.
+
+%------------------------------------------------
+% QUESTION 2
+%------------------------------------------------
+\section{Question 2: Coach Prices for 8-Hour Flights}
+
+\begin{lstlisting}[language=R, caption=8 Hour Flight Analysis]
+# 8-hour flights
+flight_8 <- subset(flight_sample, hours == 8)
+
+# Summary statistics
+summary(flight_8$coach_price)
+\end{lstlisting}
+\subsection{Output}
+
+\subsection{Interpretation}
+Long-duration flights generally have higher ticket prices. Therefore, a \$500 coach ticket may be more acceptable for 8-hour flights.
+
+%------------------------------------------------
+% QUESTION 3
+%------------------------------------------------
+\section{Question 3: Distribution of Flight Delays}
+
+\begin{lstlisting}[language=R, caption=Flight Delay Distribution]
+# Histogram
+ggplot(flight_sample, aes(x=delay)) +
+  geom_histogram(bins=40,
+                 fill="orange",
+                 color="black") +
+  labs(
+    title="Distribution of Flight Delays",
+    x="Delay Time",
+    y="Frequency"
+  )
+
+# Summary
+summary(flight_sample$delay)
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/3.0 R.png}\\
+ \end{center}
+\subsection{Interpretation}
+The delay distribution may contain outliers due to extreme delays experienced by some flights.
+
+%------------------------------------------------
+% QUESTION 4
+%------------------------------------------------
+\section{Question 4: Relationship Between Distance and Coach Price}
+
+\begin{lstlisting}[language=R, caption=Distance vs Coach Price]
+# Scatter plot
+ggplot(flight_sample,
+       aes(x=miles,
+           y=coach_price)) +
+  geom_point(alpha=0.3) +
+  labs(
+    title="Coach Price vs Flight Distance",
+    x="Miles",
+    y="Coach Price"
+  )
+
+# Correlation
+cor(flight_sample$miles,
+    flight_sample$coach_price)
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/4.0 r.png}\\
+ \end{center}
+\subsection{Interpretation}
+There is usually a positive relationship between flight distance and ticket price.
+
+%------------------------------------------------
+% QUESTION 5
+%------------------------------------------------
+\section{Question 5: Relationship Between Flight Hours and Coach Price}
+
+\begin{lstlisting}[language=R, caption=Flight Hours vs Coach Price]
+# Scatter plot
+ggplot(flight_sample,
+       aes(x=hours,
+           y=coach_price)) +
+  geom_point(alpha=0.3) +
+  labs(
+    title="Flight Hours vs Coach Price",
+    x="Flight Hours",
+    y="Coach Price"
+  )
+
+# Correlation
+cor(flight_sample$hours,
+    flight_sample$coach_price)
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/5.0 R.png}\\
+ \end{center}
+\subsection{Interpretation}
+Longer flight duration tends to increase coach ticket prices.
+
+%------------------------------------------------
+% QUESTION 6
+%------------------------------------------------
+\section{Question 6: Coach Price vs First-Class Price}
+
+\begin{lstlisting}[language=R, caption=Coach vs First-Class Prices]
+# Scatter plot
+ggplot(flight_sample,
+       aes(x=coach_price,
+           y=firstclass_price)) +
+  geom_point(alpha=0.3) +
+  labs(
+    title="Coach vs First-Class Prices",
+    x="Coach Price",
+    y="First-Class Price"
+  )
+
+# Correlation
+cor(flight_sample$coach_price,
+    flight_sample$firstclass_price)
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/6.0 R.png}\\
+ \end{center}
+\subsection{Interpretation}
+Higher coach prices are generally associated with higher first-class prices.
+
+%------------------------------------------------
+% QUESTION 7
+%------------------------------------------------
+\section{Question 7: In-Flight Features and Coach Ticket Prices}
+
+\begin{lstlisting}[language=R, caption=In-Flight Features]
+# Meal
+aggregate(coach_price ~ inflight_meal,
+          data=flight_sample,
+          mean)
+
+# Entertainment
+aggregate(coach_price ~ inflight_entertainment,
+          data=flight_sample,
+          mean)
+
+# Wifi
+aggregate(coach_price ~ inflight_wifi,
+          data=flight_sample,
+          mean)
+\end{lstlisting}
+
+\subsection{Interpretation}
+Flights with additional services such as meals, entertainment, and WiFi often have higher ticket prices.
+
+%------------------------------------------------
+% QUESTION 8
+%------------------------------------------------
+\section{Question 8: Weekend vs Weekday Ticket Prices}
+
+\begin{lstlisting}[language=R, caption=Weekend vs Weekday Analysis]
+# Average prices
+weekend_price <- flight_sample %>%
+  group_by(weekend) %>%
+  summarise(
+    avg_coach = mean(coach_price),
+    avg_firstclass = mean(firstclass_price)
+  )
+
+print(weekend_price)
+
+# Bar plot
+ggplot(weekend_price,
+       aes(x=weekend,
+           y=avg_coach,
+           fill=weekend)) +
+  geom_bar(stat="identity") +
+  labs(
+    title="Weekend vs Weekday Coach Prices",
+    x="Weekend",
+    y="Average Coach Price"
+  )
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/8.0 R.png}\\
+ \end{center}
+\subsection{Interpretation}
+Weekend ticket prices may differ from weekday prices depending on passenger demand.
+
+%------------------------------------------------
+% QUESTION 9
+%------------------------------------------------
+\section{Question 9: Redeye vs Non-Redeye Flights}
+
+\begin{lstlisting}[language=R, caption=Redeye Flight Analysis]
+# Average prices
+redeye_price <- flight_sample %>%
+  group_by(redeye) %>%
+  summarise(
+    avg_coach = mean(coach_price)
+  )
+
+print(redeye_price)
+
+# Bar plot
+ggplot(redeye_price,
+       aes(x=redeye,
+           y=avg_coach,
+           fill=redeye)) +
+  geom_bar(stat="identity") +
+  labs(
+    title="Redeye vs Non-Redeye Coach Prices",
+    x="Redeye Flight",
+    y="Average Coach Price"
+  )
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/9.0 R.png}\\
+ \end{center}
+\subsection{Interpretation}
+Redeye flights are often cheaper because they operate during late-night hours.
+
+%------------------------------------------------
+% QUESTION 10
+%------------------------------------------------
+\section{Question 10: Advanced Statistical Analysis}
+
+\subsection{Summary Statistics}
+
+\begin{lstlisting}[language=R]
+summary(flight_sample)
+\end{lstlisting}
+
+\subsection{Visualization}
+
+\begin{lstlisting}[language=R]
+# Histogram
+ggplot(flight_sample,
+       aes(x=coach_price)) +
+  geom_histogram(bins=30)
+
+# Boxplot
+ggplot(flight_sample,
+       aes(y=coach_price)) +
+  geom_boxplot()
+
+# Bar chart
+ggplot(flight_sample,
+       aes(x=weekend)) +
+  geom_bar()
+\end{lstlisting}
+\subsection{Output}
+\begin{center}
+ \includegraphics[width=0.80\textwidth]{Graphicx R/10.1.png}\\[1cm]
+ 
+ \includegraphics[width=0.80\textwidth]{Graphicx R/10.2.png}\\[1cm]
+
+ \includegraphics[width=0.80\textwidth]{Graphicx R/10.3 R.png}\\
+ \end{center}
+ 
+\subsection{Hypothesis Testing}
+
+\begin{lstlisting}[language=R]
+# Independent t-test
+t.test(
+  coach_price ~ weekend,
+  data=flight_sample
+)
+\end{lstlisting}
+
+\subsection{Correlation Analysis}
+
+\begin{lstlisting}[language=R]
+cor(
+  flight_sample[, c(
+    "coach_price",
+    "miles",
+    "hours",
+    "delay",
+    "firstclass_price"
+  )]
+)
+\end{lstlisting}
+
+\subsection{Linear Regression}
+
+\begin{lstlisting}[language=R]
+model <- lm(
+  coach_price ~ miles + hours + delay,
+  data=flight_sample
+)
+
+summary(model)
+\end{lstlisting}
+
+\subsection{Logistic Regression}
+
+\begin{lstlisting}[language=R]
+flight_sample$redeye_binary <-
+  ifelse(
+    flight_sample$redeye=="Yes",
+    1,0
+  )
+
+log_model <- glm(
+  redeye_binary ~ hours + coach_price,
+  data=flight_sample,
+  family="binomial"
+)
+
+summary(log_model)
+\end{lstlisting}
+
+%------------------------------------------------
+% CONCLUSION
+%------------------------------------------------
+\section{Conclusion}
+This analysis explored several important aspects of airline ticket pricing and flight characteristics using R programming. The study identified relationships between ticket prices, distance, flight duration, delays, and additional flight services. Statistical analysis and visualization techniques helped provide meaningful insights into airline pricing patterns.
+
+%------------------------------------------------
+% REFERENCES
+%------------------------------------------------
+\section{References}
+\begin{itemize}
+    \item R Programming Documentation
+    \item ggplot2 Package Documentation
+    \item dplyr Package Documentation
+\end{itemize}
+
+\end{document}
+```
+
+## Instructions for Overleaf
+
+1. Open Overleaf.
+2. Create a new project.
+3. Copy and paste the full LaTeX code.
+4. Replace:
+
+   * Your Name
+   * Your ID
+   * Department Name
+   * Course Teacher Name
+5. Upload any graphs/screenshots if needed.
+6. Compile using PDFLaTeX.
+
+This template includes:
+
+* Professional cover page
+* Table of contents (সূচিপত্র)
+* Colored headings
+* Background color for code
+* Professional R code formatting
+* University assignment style
+* Clean page layout
+* Statistical interpretation sections
